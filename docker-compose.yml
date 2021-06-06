@@ -1,4 +1,5 @@
 version: "3.3"
+
 services:
   frontend:
     build:
@@ -11,6 +12,7 @@ services:
       - ./frontend:/usr/src/app
     environment:
       - CHOKIDAR_USEPOLLING=true
+
   api:
     build:
       context: ./api
@@ -28,6 +30,7 @@ services:
       - PG_PASSWORD=root
       - PG_URL=postgres_db
       - FLASK_ENV=development
+
   postgres_db:
     image: postgres:13.3-alpine
     restart: always
@@ -41,6 +44,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
       - DATABASE_HOST=127.0.0.1
+
   pgadmin-compose:
     image: dpage/pgadmin4
     environment:
