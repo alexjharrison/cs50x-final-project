@@ -11,3 +11,42 @@ services:
       - ./frontend:/usr/src/app
     environment:
       - CHOKIDAR_USEPOLLING=true
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    volumes:
+      - ./api:/user/src/api
+    ports:
+      - 5000:5000
+    depends_on:
+      - postgres_db
+    environment:
+      - PG_DATABASE=db
+      - PG_USER=postgres
+      - PG_PASSWORD=root
+      - PG_URL=postgres_db
+      - FLASK_ENV=development
+  postgres_db:
+    image: postgres:13.3-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    container_name: postgres_db
+    volumes:
+      - ./initial_seeder.sql:/docker-entrypoint-initdb.d/initial_seeder.sql
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - DATABASE_HOST=127.0.0.1
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "test123!"
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres_db
